@@ -102,7 +102,7 @@ Check Endpoints
 - response 
 ```
 {
-    "/cek-resi/{expedition}/{waybill_number}": {
+    "/resi/{expedition}/{waybill_number}": {
         "method": "GET",
         "parameters": {
             "expedition": "JNE"
