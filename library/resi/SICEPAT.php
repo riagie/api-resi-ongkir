@@ -4,8 +4,6 @@ namespace App\Library\Resi;
 
 use App\Helpers\Curl;
 use App\Helpers\ResponseValidator;
-use DOMDocument;
-use DOMXPath;
 
 class SICEPAT
 {
@@ -38,12 +36,12 @@ class SICEPAT
                     'NAME'          => $data['EXPEDITION'],
                     'SERVICE'       => $response['sicepat']['result']['service'],
                     'PRICE'         => (int) $response['sicepat']['result']['totalprice'],
-                    // 'ESTIMATE_DELIVERY_DAYS' => $response['sicepat']['result'][''],
+                    // 'ESTIMATE_DELIVERY_DAYS' => $response,
                     'ORIGIN'        => $response['sicepat']['result']['kodeasal'],
                     'DESTINATION'   => $response['sicepat']['result']['kodetujuan'],
                 ],
-                'WEIGHT'            => (int) $response['sicepat']['result']['weight'],
-                'DESCRIPTION'       => $response['sicepat']['result'][''],
+                'WEIGHT'            => ((int) $response['sicepat']['result']['weight']) * 1000,
+                // 'DESCRIPTION'       => $response,
                 'SEND_DATE'         => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:' . '00', $response['sicepat']['result']['send_date']),
                 'SENDER'            => [
                     'NAME'          => $response['sicepat']['result']['sender'],
@@ -57,8 +55,8 @@ class SICEPAT
                     'IMG'           => $response['sicepat']['result']['pod_img_path'],
                 ],
                 'COURIER'           => [
-                    // 'DELIVERY'      => $response['sicepat']['result'][''],
-                    // 'PICKUP'        => $response['sicepat']['result'][''],
+                    // 'DELIVERY'      => $response,
+                    // 'PICKUP'        => $response,
                 ],
                 'STATUS'            => $response['sicepat']['result']['last_status']['status'],
                 'DATE_TIME'         => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:' . '00', $response['sicepat']['result']['last_status']['date_time']),
