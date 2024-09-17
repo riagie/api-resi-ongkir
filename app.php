@@ -3,7 +3,7 @@
 /*
  * Configure routes
  */
-$app->get('/cek-resi/{expedition}/{waybill_number}', function ($expedition, $waybill_number) use ($app) {
+$app->get('/resi/{expedition}/{waybill_number}', function ($expedition, $waybill_number) use ($app) {
     $condition = \App\Helpers\Expedition::find(substr($waybill_number, 0, 3)) ??
         ['EXPEDITION' => strtoupper($expedition)];
 
@@ -57,7 +57,7 @@ $app->get('/service', function () use ($app) {
 
 $app->get('/', function () use ($app) {
     return $app->response->setStatusCode(200)->setJsonContent([
-        '/cek-resi/:expedition/:waybill_number' => [
+        '/resi/:expedition/:waybill_number' => [
             'method' => 'GET',
             'parameters' => [
                 'expedition' => 'JNE',
