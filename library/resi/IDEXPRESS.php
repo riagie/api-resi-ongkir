@@ -7,6 +7,26 @@ use App\Helpers\ResponseValidator;
 
 class IDEXPRESS
 {
+    public static function getDaysDifference($dateTime) {
+        list($startDate, $endDate) = explode(' - ', $dateTime);
+
+        return (new \DateTime($startDate))->diff(new \DateTime($endDate))->days;
+    }
+
+    public static function formatDateTime($dateTime) {
+        return preg_replace_callback(
+            '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/',
+            function ($matches) {
+                if (isset($matches[4])) {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3] . ' ' . $matches[4] . ':' . $matches[5] . ':' . $matches[6];
+                } else {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3];
+                }
+            },
+            $dateTime
+        );
+    }
+
     public static function process(array $data): ?array
     {
         // Prepare request data
@@ -40,11 +60,7 @@ class IDEXPRESS
                 // 'WEIGHT'            => (int) $response['weight'],
                 // 'DESCRIPTION'       => $response,
                 'SEND_DATE'         => (end($response['data'][0]['scanLineVOS'])['operationType'] == '00')? 
-                                        preg_replace(
-                                            '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                            '$1-$2-$3 $4:$5:$6', 
-                                            end($response['data'][0]['scanLineVOS'])['recordTime']
-                                        ) : '',
+                                        IDEXPRESS::formatDateTime(end($response['data'][0]['scanLineVOS'])['recordTime']) : '',
                 'SENDER'            => [
                     'NAME'          => $response['data'][0]['senderName'],
                     'ADDRESS'       => $response['data'][0]['senderCityName'] .' '. $response['data'][0]['senderDistrictName'],
@@ -54,11 +70,7 @@ class IDEXPRESS
                     'ADDRESS'       => $response['data'][0]['recipientCityName'] .' '. $response['data'][0]['recipientDistrictName'],
                     // 'DESCRIPTION'   => $response,
                     'DATE_TIME'     => ($response['data'][0]['scanLineVOS'][0]['operationType'] == '10')? 
-                                        preg_replace(
-                                            '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                            '$1-$2-$3 $4:$5:$6', 
-                                            $response['data'][0]['scanLineVOS'][0]['recordTime']
-                                        ) : '',
+                                        IDEXPRESS::formatDateTime($response['data'][0]['scanLineVOS'][0]['recordTime']) : '',
                     'IMG'           => ($response['data'][0]['scanLineVOS'][0]['operationType'] == '10')? 
                                         $response['data'][0]['scanLineVOS'][0]['photoUrl'] : '',
                 ],
@@ -68,18 +80,10 @@ class IDEXPRESS
                     'PICKUP'        => end($response['data'][0]['scanLineVOS'])['operationUserName'],
                 ],
                 'STATUS'            => $response['data'][0]['waybillStatus'],
-                'DATE_TIME'         => preg_replace(
-                                        '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                        '$1-$2-$3 $4:$5:$6', 
-                                        $response['data'][0]['scanLineVOS'][0]['operationTime']
-                                    ),
+                'DATE_TIME'         => IDEXPRESS::formatDateTime($response['data'][0]['scanLineVOS'][0]['operationTime']),
                 'TRACK_HISTORY'     => array_map(function ($track) {
                     return [
-                        'DATE_TIME' => preg_replace(
-                                        '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                        '$1-$2-$3 $4:$5:$6', 
-                                        $track['recordTime']
-                                    ),
+                        'DATE_TIME' => IDEXPRESS::formatDateTime($track['recordTime']),
                         'STATUS'    => $track['operationType'],
                         'DESCRIPTION' => $track['operationBranchName'] .' '. $track['previousBranchName'] .' '. $track['nextLocationName'],
                     ];

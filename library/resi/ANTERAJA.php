@@ -7,6 +7,26 @@ use App\Helpers\ResponseValidator;
 
 class ANTERAJA
 {
+    public static function getDaysDifference($dateTime) {
+        list($startDate, $endDate) = explode(' - ', $dateTime);
+
+        return (new \DateTime($startDate))->diff(new \DateTime($endDate))->days;
+    }
+
+    public static function formatDateTime($dateTime) {
+        return preg_replace_callback(
+            '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/',
+            function ($matches) {
+                if (isset($matches[4])) {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3] . ' ' . $matches[4] . ':' . $matches[5] . ':' . $matches[6];
+                } else {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3];
+                }
+            },
+            $dateTime
+        );
+    }
+
     public static function process(array $data): ?array
     {
         // Prepare request data
@@ -50,7 +70,7 @@ class ANTERAJA
                 ],
                 'WEIGHT'            => (int) $response['content'][0]['detail']['weight'],
                 // 'DESCRIPTION'       => $response,
-                'SEND_DATE'         => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:$6', end($response['content'][0]['history'])['timestamp']),
+                'SEND_DATE'         => ANTERAJA::formatDateTime(end($response['content'][0]['history'])['timestamp']),
                 'SENDER'            => [
                     'NAME'          => $response['content'][0]['detail']['sender']['name'],
                     'ADDRESS'       => $response['content'][0]['detail']['sender_address']['address'],
@@ -67,10 +87,10 @@ class ANTERAJA
                     // 'PICKUP'        => $response,
                 ],
                 // 'STATUS'            => $response,
-                'DATE_TIME'         => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:$6', $response['content'][0]['history'][0]['timestamp']),
+                'DATE_TIME'         => ANTERAJA::formatDateTime($response['content'][0]['history'][0]['timestamp']),
                 'TRACK_HISTORY'     => array_map(function ($track) {
                     return [
-                        'DATE_TIME' => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:$6', $track['timestamp']),
+                        'DATE_TIME' => ANTERAJA::formatDateTime($track['timestamp']),
                         'STATUS'    => $track['tracking_code'],
                         'DESCRIPTION' => $track['message']['id'],
                     ];

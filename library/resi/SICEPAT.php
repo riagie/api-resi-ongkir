@@ -7,6 +7,26 @@ use App\Helpers\ResponseValidator;
 
 class SICEPAT
 {
+    public static function getDaysDifference($dateTime) {
+        list($startDate, $endDate) = explode(' - ', $dateTime);
+
+        return (new \DateTime($startDate))->diff(new \DateTime($endDate))->days;
+    }
+
+    public static function formatDateTime($dateTime) {
+        return preg_replace_callback(
+            '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/',
+            function ($matches) {
+                if (isset($matches[4])) {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3] . ' ' . $matches[4] . ':' . $matches[5] . ':' . $matches[6];
+                } else {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3];
+                }
+            },
+            $dateTime
+        );
+    }
+
     public static function process(array $data): ?array
     {
         // Prepare request data
@@ -43,7 +63,7 @@ class SICEPAT
                 ],
                 'WEIGHT'            => ((int) $response['sicepat']['result']['weight']) * 1000,
                 // 'DESCRIPTION'       => $response,
-                'SEND_DATE'         => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:' . '00', $response['sicepat']['result']['send_date']),
+                'SEND_DATE'         => SICEPAT::formatDateTime($response['sicepat']['result']['send_date']),
                 'SENDER'            => [
                     'NAME'          => $response['sicepat']['result']['sender'],
                     'ADDRESS'       => $response['sicepat']['result']['sender_address'],
@@ -52,7 +72,7 @@ class SICEPAT
                     'NAME'          => $response['sicepat']['result']['receiver_name'],
                     'ADDRESS'       => $response['sicepat']['result']['receiver_address'],
                     'DESCRIPTION'   => $response['sicepat']['result']['POD_receiver'],
-                    'DATE_TIME'     => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:' . '00', $response['sicepat']['result']['POD_receiver_time']),
+                    'DATE_TIME'     => SICEPAT::formatDateTime($response['sicepat']['result']['POD_receiver_time']),
                     'IMG'           => $response['sicepat']['result']['pod_img_path'],
                 ],
                 'COURIER'           => [
@@ -60,10 +80,10 @@ class SICEPAT
                     // 'PICKUP'        => $response,
                 ],
                 'STATUS'            => $response['sicepat']['result']['last_status']['status'],
-                'DATE_TIME'         => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:' . '00', $response['sicepat']['result']['last_status']['date_time']),
+                'DATE_TIME'         => SICEPAT::formatDateTime($response['sicepat']['result']['last_status']['date_time']),
                 'TRACK_HISTORY'     => array_map(function ($track) {
                     return [
-                        'DATE_TIME' => preg_replace('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/', '$1-$2-$3 $4:$5:' . '00', $track['date_time']),
+                        'DATE_TIME' => SICEPAT::formatDateTime($track['date_time']),
                         'STATUS'    => $track['status'],
                         'DESCRIPTION' => $track['city'],
                     ];

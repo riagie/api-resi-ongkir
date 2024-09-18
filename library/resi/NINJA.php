@@ -7,6 +7,26 @@ use App\Helpers\ResponseValidator;
 
 class NINJA
 {
+    public static function getDaysDifference($dateTime) {
+        list($startDate, $endDate) = explode(' - ', $dateTime);
+
+        return (new \DateTime($startDate))->diff(new \DateTime($endDate))->days;
+    }
+
+    public static function formatDateTime($dateTime) {
+        return preg_replace_callback(
+            '/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z/',
+            function ($matches) {
+                if (isset($matches[4])) {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3] . ' ' . $matches[4] . ':' . $matches[5] . ':' . $matches[6];
+                } else {
+                    return $matches[1] . '-' . $matches[2] . '-' . $matches[3];
+                }
+            },
+            $dateTime
+        );
+    }
+
     public static function process(array $data): ?array
     {
         // Prepare request data
@@ -39,11 +59,7 @@ class NINJA
                 ],
                 // 'WEIGHT'            => (int) $response['weight'],
                 // 'DESCRIPTION'       => $response,
-                'SEND_DATE'         => preg_replace(
-                                        '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                        '$1-$2-$3 $4:$5:$6', 
-                                        (new \DateTime($response['created_at']))->format('Y-m-d H:i:s')
-                                    ),
+                'SEND_DATE'         => NINJA::formatDateTime($response['created_at']),
                 'SENDER'            => [
                     'NAME'          => $response['shipper_short_name'],
                     // 'ADDRESS'       => $response,
@@ -53,12 +69,7 @@ class NINJA
                     // 'ADDRESS'       => $response,
                     // 'DESCRIPTION'   => $response,
                     'DATE_TIME'     => (end($response['events'])['type'] == 'DELIVERY_SUCCESS')? 
-                                        preg_replace(
-                                            '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                            '$1-$2-$3 $4:$5:$6', 
-                                            (new \DateTime(end($response['events'])['time']))->format('Y-m-d H:i:s')
-                                        ) : 
-                                        '',
+                                        NINJA::formatDateTime(end($response['events'])['time']) : '',
                     'IMG'           => $response['pods'][0]['url'],
                 ],
                 'COURIER'           => [
@@ -66,17 +77,13 @@ class NINJA
                     // 'PICKUP'        => $response,
                 ],
                 'STATUS'            => $response['granular_status'],
-                'DATE_TIME'         => preg_replace(
-                                        '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
-                                        '$1-$2-$3 $4:$5:$6', 
-                                        (new \DateTime($response['delivery_end_date']))->format('Y-m-d H:i:s')
-                                    ),
+                'DATE_TIME'         => NINJA::formatDateTime($response['delivery_end_date']),
                 'TRACK_HISTORY'     => array_map(function ($track) {
                     return [
                         'DATE_TIME' => preg_replace(
                                         '/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', 
                                         '$1-$2-$3 $4:$5:$6', 
-                                        (new \DateTime($track['time']))->format('Y-m-d H:i:s')
+                                        NINJA::formatDateTime($track['time'])
                                     ),
                         'STATUS'    => $track['type'],
                         'DESCRIPTION' => $track['tags'][0] .' '. $track['tags'][1] .' '. $track['data']['hub_name'],
