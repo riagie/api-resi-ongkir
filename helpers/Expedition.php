@@ -12,6 +12,10 @@ class Expedition
         [
             "EXPEDITION" => "ANTERAJA",
             "CODE" => []
+        ],
+        [
+            "EXPEDITION" => "NINJA",
+            "CODE" => []
         ]
     ];
 
