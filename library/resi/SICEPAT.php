@@ -36,6 +36,7 @@ class SICEPAT
                     'NAME'          => $data['EXPEDITION'],
                     'SERVICE'       => $response['sicepat']['result']['service'],
                     'PRICE'         => (int) $response['sicepat']['result']['totalprice'],
+                    // 'METHOD'        => $response,
                     // 'ESTIMATE_DELIVERY_DAYS' => $response,
                     'ORIGIN'        => $response['sicepat']['result']['kodeasal'],
                     'DESTINATION'   => $response['sicepat']['result']['kodetujuan'],

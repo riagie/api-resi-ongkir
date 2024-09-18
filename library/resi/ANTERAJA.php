@@ -43,6 +43,7 @@ class ANTERAJA
                     'NAME'          => $data['EXPEDITION'],
                     'SERVICE'       => $response['content'][0]['detail']['service_code'],
                     'PRICE'         => (int) $response['content'][0]['detail']['actual_amount'],
+                    // 'METHOD'        => $response,
                     'ESTIMATE_DELIVERY_DAYS' => $response['content'][0]['detail']['estimated_date'],
                     // 'ORIGIN'        => $response,
                     // 'DESTINATION'   => $response,

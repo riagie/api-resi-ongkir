@@ -19,7 +19,7 @@ class ResponseValidator implements ValidatorInterface
     ];
 
     private static $nestedParameters = [
-        'EXPEDITION' => ['NAME', 'SERVICE', 'PRICE', 'ESTIMATE_DELIVERY_DAYS', 'ORIGIN', 'DESTINATION'],
+        'EXPEDITION' => ['NAME', 'SERVICE', 'PRICE', 'METHOD', 'ESTIMATE_DELIVERY_DAYS', 'ORIGIN', 'DESTINATION'],
         'SENDER'     => ['NAME', 'ADDRESS'],
         'RECEIVER'   => ['NAME', 'ADDRESS', 'DESCRIPTION', 'DATE_TIME', 'IMG'],
         'COURIER'    => ['DELIVERY', 'PICKUP'],
