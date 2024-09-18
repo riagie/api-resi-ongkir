@@ -81,6 +81,11 @@ class Expedition
             "CODE" => []
         ],
         [
+            "EXPEDITION" => "JET",
+            "DESCRIPTION" => "JET offers express delivery services with a focus on speed and customer satisfaction.",
+            "CODE" => []
+        ],
+        [
             "EXPEDITION" => "JNE",
             "DESCRIPTION" => "JNE (Jalur Nugraha Ekakurir) is one of the largest logistics and courier companies in Indonesia, known for its extensive network and reliable delivery services.",
             "CODE" => []
@@ -136,6 +141,11 @@ class Expedition
             "CODE" => []
         ],
         [
+            "EXPEDITION" => "PCP",
+            "DESCRIPTION" => "PCP offers a range of logistics solutions including parcel delivery and freight services.",
+            "CODE" => []
+        ],
+        [
             "EXPEDITION" => "POS",
             "DESCRIPTION" => "Pos Indonesia offers traditional postal services as well as logistics and courier solutions across the country.",
             "CODE" => []
@@ -153,6 +163,11 @@ class Expedition
         [
             "EXPEDITION" => "RPX",
             "DESCRIPTION" => "RPX Holding provides comprehensive logistics solutions including parcel and freight delivery services.",
+            "CODE" => []
+        ],
+        [
+            "EXPEDITION" => "RAYSPEED",
+            "DESCRIPTION" => "Rayspeed provides logistics and delivery services with a focus on speed and reliability.",
             "CODE" => []
         ],
         [
@@ -176,6 +191,11 @@ class Expedition
             "CODE" => []
         ],
         [
+            "EXPEDITION" => "SPX",
+            "DESCRIPTION" => "SPX (spx.co.id) provides reliable and efficient logistics and delivery services, specializing in both domestic and international shipments.",
+            "CODE" => []
+        ],
+        [
             "EXPEDITION" => "STAR",
             "DESCRIPTION" => "Star Cargo provides comprehensive delivery and logistics services with a focus on reliability.",
             "CODE" => []
@@ -190,37 +210,7 @@ class Expedition
             "DESCRIPTION" => "21 Express specializes in parcel delivery services with an emphasis on quick and reliable delivery.",
             "CODE" => []
         ],
-        [
-            "EXPEDITION" => "DELIVEREE",
-            "DESCRIPTION" => "Deliveree provides on-demand delivery and logistics services with a focus on convenience and customer satisfaction.",
-            "CODE" => []
-        ],
-        [
-            "EXPEDITION" => "RAYSPEED",
-            "DESCRIPTION" => "Rayspeed provides logistics and delivery services with a focus on speed and reliability.",
-            "CODE" => []
-        ],
-        [
-            "EXPEDITION" => "FIRSTLOGISTICS",
-            "DESCRIPTION" => "First Logistics offers a range of logistics solutions including parcel and cargo delivery services.",
-            "CODE" => []
-        ],
-        [
-            "EXPEDITION" => "IDLCARGO",
-            "DESCRIPTION" => "IDL Cargo offers a range of cargo and delivery services with an emphasis on efficiency.",
-            "CODE" => []
-        ],
-        [
-            "EXPEDITION" => "PCP",
-            "DESCRIPTION" => "PCP offers a range of logistics solutions including parcel delivery and freight services.",
-            "CODE" => []
-        ],
-        [
-            "EXPEDITION" => "JET",
-            "DESCRIPTION" => "JET offers express delivery services with a focus on speed and customer satisfaction.",
-            "CODE" => []
-        ],
-    ];    
+    ];     
 
     public static function all()
     {
